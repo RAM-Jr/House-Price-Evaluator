@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block evaluation_form %}
+
+
+    <div>
+        <header>Avaliação Automática de Imóveis</header>
+        <form action="{% url 'evaluations:result' %}" id="submit-form" method="POST">
+            {% csrf_token %}
+            <div class="form first">
+                <div class="details personal">
+                    <span class="title">Informações Gerais do Imovel</span>
+
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label>Finalidade</label>
+                            {{form.venda_ou_aluguel}}
+                        </div>
+
+                        <div class="input-field">
+                            <label>Design</label>
+                            {{form.design}}
+                        </div>
+
+                        <div class="input-field">
+                            <label>Bairro</label>
+                            {{form.bairro}}
+                        </div>
+
+                        <div class="input-field">
+                            <label>Tipologia</label>
+                            {{ form.tipologia }}
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="details ID">
+                    <span class="title">Comodidades e Outras Caracteristicas do Imovel</span>
+
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label>Móveis</label>
+                            {{ form.moveis }}
+                        </div>
+                        <div class="input-field">
+                            <label>Guarda-fatos</label>
+                            {{ form.guardaFatos }}
+                        </div>
+                        <div class="input-field">
+                            <label>Ar-condicionado</label>
+                            {{ form.arCondicionado }}
+                        </div>
+                        <div class="input-field">
+                            <label>Garagem</label>
+                            {{ form.garagem }}
+                        </div>
+                        <div class="input-field">
+                            <label>Cozinha Americana</label>
+                            {{ form.cozinhaAmericana }}
+                        </div>
+                        <div class="input-field">
+                            <label>Nº WC's</label>
+                            {{ form.numWC }}
+                        </div>
+                        <div class="input-field">
+                            <label>Suite</label>
+                            {{ form.suite }}
+                        </div>
+                        <div class="input-field">
+                            <label>Vista</label>
+                            {{ form.vista }}
+                        </div>
+                        <div class="input-field">
+                            <label>Piscina</label>
+                            {{ form.piscina }}
+                        </div>
+                        <div class="input-field">
+                            <label>Obras</label>
+                            {{ form.obras }}
+                        </div>
+                        <div class="input-field">
+
+                        </div>
+                        <div class="input-field">
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="submit">
+                        <span class="btnText">Avaliar</span>
+                        <i class="uil uil-navigator"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

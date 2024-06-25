@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block evaluation_result %}
+
+
+    <div>
+        <header style="margin-bottom:20px">Avaliação Automática de Imóveis</header>
+
+        <div class="fields">
+            <div style="text-align: center;">
+                <span style="display: block;">Valor Estimado:</span>
+                <h2 style="display: block;">{{ result }} MZN</h2>
+            </div>
+        </div>
+
+        <form action="result">
+            {% csrf_token %}
+            <div class="form first">
+                <div class="details personal">
+                    <span class="title">Informações Gerais do Imóvel</span>
+
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label>Finalidade</label>
+                            <input type="text" value="{{ finalidade }}" readonly>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Design</label>
+                            <input type="text" value="{{ design }}" readonly>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Bairro</label>
+                            <input type="text" value="{{ bairro }}" readonly>
+                        </div>
+
+                        <div class="input-field">
+                            <label>Tipologia</label>
+                            <input type="text" value="{{ tipologia }}" readonly>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="details ID">
+                    <span class="title">Comodidades e Outras Caracteristicas do Imovel</span>
+
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label>Móveis</label>
+                             <input type="text" value="{{ moveis }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <label>Guarda-fatos</label>
+                            <input type="text" value="{{ guardafatos }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <label>Ar-condicionado</label>
+                            <input type="text" value="{{ arcondicionado }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <input type="text" value="{{ garagem }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <label>Cozinha Americana</label>
+                            <input type="text" value="{{ cozinhaamericana }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <label>Nº WC's</label>
+                            <input type="text" value="{{ numWC }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <label>Suite</label>
+                            <input type="text" value="{{ suite }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <label>Vista</label>
+                            <input type="text" value="{{ vista }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <label>Piscina</label>
+                            <input type="text" value="{{ piscina }}" readonly>
+                        </div>
+                        <div class="input-field">
+                            <label>Obras</label>
+                            <input type="text" value="{{ obras }}" readonly>
+                        </div>
+                        <div class="submit input-field">
+                            <label style="color: rgba(0, 0, 0, 0)">_</label>
+                            <a href="{% url 'evaluations:evaluation_form' %}" style="text-decoration: none">
+                                <button type="button" style="max-width: none">
+                                    <i class="uil uil-arrow-circle-left"></i>
+                                    <span class="btnText">Voltar</span>
+                                </button>
+                            </a>
+                        </div>
+
+                        <div class="input-field">
+                        </div>
+
+                    </div>
+
+                    <div class="input-field">
+                        </div>
+                    <div class="input-field">
+                        </div>
+                </div>
+            </div>
+        </form>
+        <div  style="display: flex;
+          justify-content: center;
+          align-items: center;
+        ">
+            <button type="submit" id="captureButton"
+                    style="display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 45px;
+                    max-width: 200px;
+                    width: 100%;
+                    border: none;
+                    outline: none;
+                    color: #fff;
+                    border-radius: 5px;
+                    background-color: #3d3d3d;
+                    transition: all 0.3s linear;
+                    cursor: pointer;"
+            ><i class="uil uil-file-export"></i> Exportar
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        document.getElementById('captureButton').addEventListener('click', function() {
+            // Capture the entire body, not just the visible part
+            html2canvas(document.body, {scrollY: -window.scrollY}).then(function(canvas) {
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+
+                // Determine the aspect ratio of the content
+                const contentWidth = canvas.width;
+                const contentHeight = canvas.height;
+                const aspectRatio = contentWidth / contentHeight;
+
+                // Set PDF dimensions and orientation
+                let pdf;
+                let imgWidth;
+                let imgHeight;
+                if (aspectRatio > 1) {
+                    // Landscape
+                    pdf = new jsPDF('landscape', 'pt', 'a4');
+                    imgWidth = 841.89;
+                    imgHeight = 595.28;
+                } else {
+                    // Portrait
+                    pdf = new jsPDF('portrait', 'pt', 'a4');
+                    imgWidth = 595.28;
+                    imgHeight = 841.89;
+                }
+
+                const imgRatio = contentWidth / contentHeight;
+                const pdfRatio = imgWidth / imgHeight;
+
+                let xOffset = 0;
+                let yOffset = 0;
+
+                if (imgRatio > pdfRatio) {
+                    imgHeight = imgWidth / imgRatio;
+                    yOffset = (595.28 - imgHeight) / 2;
+                } else {
+                    imgWidth = imgHeight * imgRatio;
+                    xOffset = (841.89 - imgWidth) / 2;
+                }
+
+                pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
+
+                pdf.save('result.pdf');
+            });
+        });
+    </script>
+
+{% endblock %}
